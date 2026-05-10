@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bun Bites — Wah Cantt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  img { display: block; max-width: 100%; }
+
+  /* ── TOKENS ── */
+  :root {
+    --cream:    #F7F3EE;
+    --parchment:#EDE6DB;
+    --sand:     #D4C5B0;
+    --brown:    #4A3728;
+    --espresso: #2C1A0E;
+    --gold:     #B8860B;
+    --warm-mid: #7A5C42;
+    --white:    #FEFCF9;
+
+    --f-display: 'Outfit', sans-serif;
+    --f-serif:   'Instrument Serif', serif;
+
+    --z-nav:    100;
+    --z-modal:  200;
+    --z-toast:  300;
+
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:   cubic-bezier(0.45, 0, 0.55, 1);
+  }
+
+  body {
+    font-family: var(--f-display);
+    background: var(--cream);
+    color: var(--espresso);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: var(--z-nav);
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.4s var(--ease-in-out), backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(247, 243, 238, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(74, 55, 40, 0.08);
+  }
+  .nav-logo {
+    font-family: var(--f-serif);
+    font-size: 1.5rem;
+    color: var(--espresso);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--gold); font-style: italic; }
+  .nav-links {
+    display: flex;
+    gap: 2.2rem;
+    list-style: none;
+    align-items: center;
+  }
+  .nav-links a {
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--brown);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--espresso);
+    color: var(--cream) !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 4px;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--gold) !important; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100dvh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+  }
+  .hero-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 4rem 6rem 5rem;
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--gold);
+    display: block;
+  }
+  .hero-h1 {
+    font-family: var(--f-serif);
+    font-size: clamp(3.2rem, 5.5vw, 6rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    color: var(--espresso);
+    margin-bottom: 1.6rem;
+    text-wrap: balance;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--warm-mid);
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--warm-mid);
+    max-width: 40ch;
+    line-height: 1.65;
+    margin-bottom: 2.8rem;
+    font-weight: 400;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--espresso);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.22s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    color: var(--brown);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: color 0.2s, gap 0.2s;
+  }
+  .btn-ghost:hover { color: var(--gold); gap: 0.8rem; }
+  .hero-meta {
+    margin-top: 4rem;
+    display: flex;
+    gap: 2.5rem;
+  }
+  .hero-stat { display: flex; flex-direction: column; gap: 0.2rem; }
+  .hero-stat-num {
+    font-family: var(--f-serif);
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--espresso);
+    line-height: 1;
+  }
+  .hero-stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sand);
+  }
+  .hero-divider {
+    width: 1px;
+    background: var(--sand);
+    align-self: stretch;
+  }
+
+  /* Hero Right — image panel */
+  .hero-right {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-right img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.06);
+    transition: transform 8s var(--ease-out-expo);
+  }
+  .hero-right:hover img { transform: scale(1); }
+  .hero-right-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, var(--cream) 0%, transparent 18%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-badge {
+    position: absolute;
+    bottom: 3rem; left: 2.5rem;
+    z-index: 3;
+    background: rgba(247, 243, 238, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(74, 55, 40, 0.12);
+    padding: 1rem 1.4rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .badge-stars { color: var(--gold); font-size: 0.9rem; letter-spacing: 0.05em; }
+  .badge-text { font-size: 0.82rem; color: var(--espresso); font-weight: 500; }
+  .badge-text strong { display: block; font-size: 1rem; font-family: var(--f-serif); }
+
+  /* ── MARQUEE ── */
+  .marquee-wrap {
+    background: var(--espresso);
+    padding: 1rem 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 22s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  .marquee-item {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sand);
+    padding: 0 2.5rem;
+  }
+  .marquee-sep { color: var(--gold); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── SECTION INTRO ── */
+  .section-intro {
+    text-align: center;
+    max-width: 580px;
+    margin: 0 auto 4rem;
+  }
+  .section-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .section-h2 {
+    font-family: var(--f-serif);
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--espresso);
+    text-wrap: balance;
+    margin-bottom: 1rem;
+  }
+  .section-h2 em { font-style: italic; color: var(--warm-mid); }
+  .section-sub {
+    font-size: 1rem;
+    color: var(--warm-mid);
+    line-height: 1.65;
+  }
+
+  /* ── BENTO: ABOUT ── */
+  .about {
+    padding: 8rem 5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 5fr 3fr 4fr;
+    grid-template-rows: auto auto;
+    gap: 1.5rem;
+  }
+  .about-card {
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(74, 55, 40, 0.07);
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+  }
+  .about-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(44, 26, 14, 0.08);
+  }
+  .about-card-main {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 420px;
+  }
+  .about-card-img {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    overflow: hidden;
+  }
+  .about-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    min-height: 200px;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .about-card-img:hover img { transform: scale(1.04); }
+  .about-card-location {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    padding: 2rem;
+    background: var(--espresso);
+    color: var(--cream);
+  }
+  .about-card-stat {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+    padding: 2.5rem;
+    background: var(--parchment);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  .about-card-hours {
+    grid-column: 3 / 4;
+    grid-row: 2 / 3;
+    padding: 2.5rem;
+  }
+
+  .about-card-main .card-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .about-card-main h3 {
+    font-family: var(--f-serif);
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+    line-height: 1.18;
+    color: var(--espresso);
+    margin-bottom: 1.2rem;
+    text-wrap: balance;
+  }
+  .about-card-main p {
+    font-size: 0.95rem;
+    color: var(--warm-mid);
+    line-height: 1.7;
+    max-width: 52ch;
+    flex: 1;
+  }
+  .bento-stat-big {
+    font-family: var(--f-serif);
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--espresso);
+    margin-bottom: 0.4rem;
+  }
+  .bento-stat-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-mid);
+  }
+  .bento-loc-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.8rem;
+  }
+  .bento-loc-address {
+    font-family: var(--f-serif);
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: var(--cream);
+    margin-bottom: 1.2rem;
+  }
+  .bento-loc-link {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.2s;
+  }
+  .bento-loc-link:hover { gap: 0.7rem; }
+
+  .hours-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .hours-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--parchment);
+    font-size: 0.88rem;
+    color: var(--espresso);
+  }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-row span:last-child { color: var(--warm-mid); font-weight: 500; }
+  .closed-badge {
+    display: inline-block;
+    background: #F2E8DF;
+    color: var(--gold);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+  }
+
+  /* ── MENU ── */
+  .menu-section {
+    background: var(--espresso);
+    padding: 8rem 5rem;
+  }
+  .menu-section .section-tag { color: var(--sand); }
+  .menu-section .section-h2 { color: var(--cream); }
+  .menu-section .section-sub { color: var(--sand); }
+  .menu-inner { max-width: 1400px; margin: 0 auto; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+  .menu-card {
+    background: rgba(247, 243, 238, 0.04);
+    border: 1px solid rgba(247, 243, 238, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background 0.3s, transform 0.3s var(--ease-out-expo);
+    cursor: pointer;
+  }
+  .menu-card:hover {
+    background: rgba(247, 243, 238, 0.07);
+    transform: translateY(-3px);
+  }
+  .menu-card-img { overflow: hidden; height: 200px; }
+  .menu-card-img img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .menu-card:hover .menu-card-img img { transform: scale(1.06); }
+  .menu-card-body { padding: 1.6rem; }
+  .menu-card-tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .menu-card-name {
+    font-family: var(--f-serif);
+    font-size: 1.25rem;
+    color: var(--cream);
+    margin-bottom: 0.5rem;
+    line-height: 1.25;
+  }
+  .menu-card-desc {
+    font-size: 0.85rem;
+    color: var(--sand);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .menu-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .menu-price {
+    font-family: var(--f-serif);
+    font-size: 1.1rem;
+    color: var(--cream);
+  }
+  .menu-tag-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(184, 134, 11, 0.18);
+    color: var(--gold);
+    padding: 0.25rem 0.65rem;
+    border-radius: 3px;
+  }
+
+  /* ── EXPERIENCE ── */
+  .experience {
+    padding: 8rem 5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+  .exp-left { position: relative; }
+  .exp-img-main {
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  .exp-img-float {
+    position: absolute;
+    bottom: -3rem; right: -3rem;
+    width: 48%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 6px solid var(--cream);
+    box-shadow: 0 20px 60px rgba(44, 26, 14, 0.14);
+  }
+  .exp-right { padding-left: 1rem; }
+  .exp-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .exp-h2 {
+    font-family: var(--f-serif);
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.12;
+    color: var(--espresso);
+    margin-bottom: 1.4rem;
+    text-wrap: balance;
+  }
+  .exp-h2 em { font-style: italic; color: var(--warm-mid); }
+  .exp-p {
+    font-size: 0.97rem;
+    color: var(--warm-mid);
+    line-height: 1.75;
+    max-width: 50ch;
+    margin-bottom: 1.8rem;
+  }
+  .exp-features { list-style: none; display: flex; flex-direction: column; gap: 0.9rem; }
+  .exp-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.92rem;
+    color: var(--brown);
+  }
+  .exp-features li::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews {
+    background: var(--parchment);
+    padding: 8rem 5rem;
+  }
+  .reviews-inner { max-width: 1400px; margin: 0 auto; }
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .review-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 2.2rem;
+    border: 1px solid rgba(74, 55, 40, 0.07);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    transition: transform 0.3s var(--ease-out-expo), box-shadow 0.3s;
+  }
+  .review-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 16px 40px rgba(44, 26, 14, 0.08);
+  }
+  .review-stars { color: var(--gold); font-size: 0.9rem; letter-spacing: 0.08em; }
+  .review-text {
+    font-family: var(--f-serif);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--espresso);
+    font-style: italic;
+    flex: 1;
+  }
+  .review-card-featured .review-text { font-size: 1.25rem; }
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .review-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--sand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--f-serif);
+    font-size: 1rem;
+    color: var(--espresso);
+    flex-shrink: 0;
+  }
+  .review-name { font-size: 0.88rem; font-weight: 600; color: var(--espresso); }
+  .review-date { font-size: 0.75rem; color: var(--warm-mid); margin-top: 0.1rem; }
+
+  /* ── GALLERY ── */
+  .gallery {
+    padding: 8rem 5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .gallery-mosaic {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 320px 320px;
+    gap: 1rem;
+    margin-top: 4rem;
+  }
+  .gallery-cell {
+    overflow: hidden;
+    border-radius: 6px;
+    position: relative;
+  }
+  .gallery-cell.tall { grid-row: 1 / 3; }
+  .gallery-cell img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+  .gallery-cell:hover img { transform: scale(1.05); }
+  .gallery-cell-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(44, 26, 14, 0.5) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .gallery-cell:hover .gallery-cell-overlay { opacity: 1; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--espresso);
+    padding: 8rem 5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(184, 134, 11, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .cta-h2 {
+    font-family: var(--f-serif);
+    font-size: clamp(2.4rem, 4.5vw, 5rem);
+    line-height: 1.06;
+    color: var(--cream);
+    max-width: 700px;
+    margin: 0 auto 1.5rem;
+    text-wrap: balance;
+  }
+  .cta-h2 em { font-style: italic; color: var(--gold); }
+  .cta-sub {
+    font-size: 1rem;
+    color: var(--sand);
+    margin-bottom: 3rem;
+    max-width: 50ch;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.65;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-light {
+    background: var(--cream);
+    color: var(--espresso);
+    padding: 0.85rem 2.2rem;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: background 0.22s, transform 0.15s;
+  }
+  .btn-light:hover { background: var(--parchment); transform: translateY(-1px); }
+  .btn-outline-light {
+    border: 1.5px solid rgba(247, 243, 238, 0.3);
+    color: var(--cream);
+    padding: 0.85rem 2.2rem;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    transition: border-color 0.22s, transform 0.15s, background 0.22s;
+  }
+  .btn-outline-light:hover {
+    border-color: var(--gold);
+    background: rgba(184, 134, 11, 0.1);
+    transform: translateY(-1px);
+  }
+  .cta-info-row {
+    margin-top: 4rem;
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cta-info-item {
+    text-align: center;
+  }
+  .cta-info-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 0.4rem;
+  }
+  .cta-info-val {
+    font-family: var(--f-serif);
+    font-size: 1.05rem;
+    color: var(--cream);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #1A0D06;
+    padding: 4rem 5rem 2.5rem;
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(247, 243, 238, 0.06);
+    margin-bottom: 2rem;
+  }
+  .footer-brand .nav-logo { font-size: 1.8rem; display: inline-block; margin-bottom: 1rem; }
+  .footer-brand p {
+    font-size: 0.88rem;
+    color: var(--sand);
+    line-height: 1.65;
+    max-width: 30ch;
+  }
+  .footer-col h4 {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-bottom: 1.4rem;
+  }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .footer-col ul a {
+    font-size: 0.88rem;
+    color: rgba(247, 243, 238, 0.55);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-col ul a:hover { color: var(--cream); }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 0.78rem;
+    color: rgba(247, 243, 238, 0.3);
+  }
+  .footer-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8rem;
+    color: rgba(247, 243, 238, 0.4);
+  }
+  .footer-rating strong { color: var(--gold); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+
+    .hero { grid-template-columns: 1fr; }
+    .hero-left { padding: 7rem 2rem 4rem; }
+    .hero-right { height: 50dvh; }
+    .hero-right-overlay { background: linear-gradient(to bottom, var(--cream) 0%, transparent 30%); }
+    .hero-meta { gap: 1.5rem; }
+
+    .about { padding: 5rem 1.5rem; }
+    .about-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+    }
+    .about-card-main { grid-column: 1; grid-row: auto; min-height: auto; }
+    .about-card-img  { grid-column: 1; grid-row: auto; }
+    .about-card-location { grid-column: 1; grid-row: auto; }
+    .about-card-stat { grid-column: 1; grid-row: auto; }
+    .about-card-hours { grid-column: 1; grid-row: auto; }
+
+    .menu-section { padding: 5rem 1.5rem; }
+    .menu-grid { grid-template-columns: 1fr; }
+
+    .experience { padding: 5rem 1.5rem; }
+    .exp-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .exp-img-float { right: 0; width: 42%; }
+
+    .reviews { padding: 5rem 1.5rem; }
+    .reviews-grid { grid-template-columns: 1fr; }
+
+    .gallery { padding: 5rem 1.5rem; }
+    .gallery-mosaic {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 200px 200px 200px;
+    }
+    .gallery-cell.tall { grid-row: auto; }
+
+    .cta-section { padding: 5rem 1.5rem; }
+    .cta-info-row { gap: 2rem; }
+
+    footer { padding: 3rem 1.5rem 2rem; }
+    .footer-top { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ──────────────────── NAV ──────────────────── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Bun <span>Bites</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">Story</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="tel:+92" class="nav-cta">Reserve</a></li>
+  </ul>
+</nav>
+
+<!-- ──────────────────── HERO ──────────────────── -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-tag reveal">Wah Cantt · Est. Since Always</div>
+    <h1 class="hero-h1 reveal reveal-delay-1">
+      Where every<br /><em>bite tells</em><br />a story.
+    </h1>
+    <p class="hero-sub reveal reveal-delay-2">
+      All-you-can-eat indulgence crafted for those who refuse to settle for ordinary. Burgers, bites, and flavors that stay with you.
+    </p>
+    <div class="hero-actions reveal reveal-delay-3">
+      <a href="#menu" class="btn-primary">Explore the Menu</a>
+      <a href="#gallery" class="btn-ghost">See inside &rarr;</a>
+    </div>
+    <div class="hero-meta reveal reveal-delay-3">
+      <div class="hero-stat">
+        <span class="hero-stat-num">4.8</span>
+        <span class="hero-stat-label">Google Rating</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">308</span>
+        <span class="hero-stat-label">Reviews</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stat">
+        <span class="hero-stat-num">₨1–2K</span>
+        <span class="hero-stat-label">Per Head</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img src="https://loremflickr.com/900/1200/burger,food" alt="Signature Bun Bites burger" loading="eager" />
+    <div class="hero-right-overlay"></div>
+    <div class="hero-badge">
+      <div class="badge-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+      <div class="badge-text">
+        <strong>"Absolutely addictive."</strong>
+        Top reviewed in Wah Cantt
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── MARQUEE ──────────────────── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <!-- duplicate for seamless loop -->
+    <span class="marquee-item">All You Can Eat</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Happy Hour Bites</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Dine In &amp; Takeout</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Open Till Midnight</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Gadwaal Rd, Wah Cantt</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">4.8 &#9733; Rating</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+
+    <span class="marquee-item">All You Can Eat</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Happy Hour Bites</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Dine In &amp; Takeout</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Open Till Midnight</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">Gadwaal Rd, Wah Cantt</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+    <span class="marquee-item">4.8 &#9733; Rating</span>
+    <span class="marquee-item marquee-sep">&mdash;</span>
+  </div>
+</div>
+
+<!-- ──────────────────── ABOUT BENTO ──────────────────── -->
+<section class="about" id="about">
+  <div class="about-grid">
+
+    <div class="about-card about-card-main reveal">
+      <div>
+        <div class="card-label">Our Philosophy</div>
+        <h3>Food that brings people back, again and again.</h3>
+      </div>
+      <p>
+        Nestled beside Alhuda on Gadwaal Road, Bun Bites was built on one promise — that every guest deserves a meal worth remembering. From our signature smashed burgers to loaded fries, each dish is crafted with intention. The portions are generous. The flavors are unapologetic. The price is honest.
+      </p>
+      <a href="#menu" class="btn-ghost" style="margin-top:1.4rem;">See what we serve &rarr;</a>
+    </div>
+
+    <div class="about-card about-card-img reveal reveal-delay-1">
+      <img src="https://loremflickr.com/600/400/restaurant,kitchen" alt="Bun Bites kitchen craft" loading="lazy" />
+    </div>
+
+    <div class="about-card about-card-location reveal reveal-delay-2">
+      <div class="bento-loc-label">Find Us</div>
+      <div class="bento-loc-address">
+        Gadwaal Rd, beside Alhuda,<br />Wah Cantt 47040
+      </div>
+      <a href="https://maps.google.com" class="bento-loc-link" target="_blank">
+        Get Directions &rarr;
+      </a>
+    </div>
+
+    <div class="about-card about-card-stat reveal reveal-delay-1">
+      <div class="bento-stat-big">308</div>
+      <div class="bento-stat-label">Verified Reviews</div>
+    </div>
+
+    <div class="about-card about-card-hours reveal reveal-delay-2">
+      <div class="hours-label">Opening Hours</div>
+      <div class="hours-row">
+        <span>Dine In</span>
+        <span>2 pm – 12 am</span>
+      </div>
+      <div class="hours-row">
+        <span>Takeout</span>
+        <span>11 am – 12 am</span>
+      </div>
+      <div class="hours-row">
+        <span>Happy Hour</span>
+        <span>4 pm – 7 pm</span>
+      </div>
+      <div style="margin-top:0.8rem;">
+        <span class="closed-badge">Currently Closed · Opens 2 pm</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────── MENU ──────────────────── -->
+<section class="menu-section" id="menu">
+  <div class="menu-inner">
+    <div class="section-intro reveal">
+      <div class="section-tag">What We Serve</div>
+      <h2 class="section-h2">Crafted with <em>craving</em> in mind.</h2>
+      <p class="section-sub">Every item built to make you reach for one more. Priced for the people.</p>
+    </div>
+
+    <div class="menu-grid">
+
+      <div class="menu-card reveal">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/smashburger,burger" alt="Smash Burger" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Signature</div>
+          <div class="menu-card-name">Double Smash Burger</div>
+          <div class="menu-card-desc">Two smashed patties, caramelised onions, house sauce, pickles, brioche bun.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 650</span>
+            <span class="menu-tag-badge">Fan Favourite</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card reveal reveal-delay-1">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/frenchfries,fries" alt="Loaded Fries" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Sides</div>
+          <div class="menu-card-name">Loaded Masala Fries</div>
+          <div class="menu-card-desc">Crisp fries, house masala dust, sour cream, jalapeños, cheddar drizzle.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 380</span>
+            <span class="menu-tag-badge">Happy Hour</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card reveal reveal-delay-2">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/friedchicken,chicken" alt="Crispy Chicken" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Bestseller</div>
+          <div class="menu-card-name">Crispy Chicken Stack</div>
+          <div class="menu-card-desc">Buttermilk-brined breast, coleslaw, chipotle mayo, toasted sesame bun.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 590</span>
+            <span class="menu-tag-badge">Spicy Option</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card reveal">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/chicken,wings" alt="Wings" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Shareable</div>
+          <div class="menu-card-name">Buffalo Wings (6 pcs)</div>
+          <div class="menu-card-desc">Slow-marinated wings, tossed in tangy buffalo glaze, blue cheese dip.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 720</span>
+            <span class="menu-tag-badge">All You Can Eat</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card reveal reveal-delay-1">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/bbq,grill" alt="Zinger" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Grill</div>
+          <div class="menu-card-name">Smoky BBQ Zinger</div>
+          <div class="menu-card-desc">Char-grilled fillet, smoky BBQ sauce, crispy onion rings, house pickles.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 620</span>
+            <span class="menu-tag-badge">Grill Special</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-card reveal reveal-delay-2">
+        <div class="menu-card-img">
+          <img src="https://loremflickr.com/600/400/milkshake,dessert" alt="Milkshakes" loading="lazy" />
+        </div>
+        <div class="menu-card-body">
+          <div class="menu-card-tag">Drinks</div>
+          <div class="menu-card-name">Thick Shakes</div>
+          <div class="menu-card-desc">Oreo Crunch / Strawberry Dream / Lotus Biscoff. All full-portion, no halves.</div>
+          <div class="menu-card-footer">
+            <span class="menu-price">₨ 350</span>
+            <span class="menu-tag-badge">3 Flavours</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── EXPERIENCE ──────────────────── -->
+<section class="experience" id="experience">
+  <div class="exp-grid">
+    <div class="exp-left reveal">
+      <img class="exp-img-main" src="https://loremflickr.com/800/1000/restaurant,food" alt="Bun Bites dining space" loading="lazy" />
+      <img class="exp-img-float" src="https://loremflickr.com/500/500/burger" alt="Burger close-up detail" loading="lazy" />
+    </div>
+    <div class="exp-right reveal reveal-delay-2">
+      <div class="exp-tag">The Bun Bites Experience</div>
+      <h2 class="exp-h2">More than a meal.<br /><em>A ritual.</em></h2>
+      <p class="exp-p">
+        Great food doesn't need a five-star address. It needs craft, consistency, and a team that cares. Since day one, that's what Bun Bites has stood for in Wah Cantt.
+      </p>
+      <ul class="exp-features">
+        <li>All-you-can-eat formats on select items — no pressure, just pleasure.</li>
+        <li>Happy hour deals crafted so the whole table wins, not just one person.</li>
+        <li>Takeout ready from 11 AM — your schedule, your cravings, no compromise.</li>
+        <li>Dine-in open until midnight — because the best conversations deserve late nights.</li>
+        <li>Priced between ₨ 1,000 – 2,000 per head for a full experience.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── REVIEWS ──────────────────── -->
+<section class="reviews" id="reviews">
+  <div class="reviews-inner">
+    <div class="section-intro reveal">
+      <div class="section-tag">Guest Voices</div>
+      <h2 class="section-h2">308 people can't be <em>wrong.</em></h2>
+      <p class="section-sub">Real words from real guests who came back for seconds — and thirds.</p>
+    </div>
+
+    <div class="reviews-grid">
+
+      <div class="review-card review-card-featured reveal">
+        <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">
+          "I've tried every burger spot in Wah Cantt. Bun Bites isn't just the best — it's the only one I actually come back to. The smash burger has ruined every other burger for me."
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">A</div>
+          <div>
+            <div class="review-name">Ahmed R.</div>
+            <div class="review-date">Wah Cantt · 3 weeks ago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-1">
+        <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">
+          "All-you-can-eat at this price point? That's either a mistake or magic. It's definitely magic."
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">S</div>
+          <div>
+            <div class="review-name">Sara K.</div>
+            <div class="review-date">Google Review · 1 month ago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-card reveal reveal-delay-2">
+        <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="review-text">
+          "Ordered takeout at 11pm. Food arrived hot, proportions generous, no corners cut. That's how you build loyalty."
+        </div>
+        <div class="review-author">
+          <div class="review-avatar">U</div>
+          <div>
+            <div class="review-name">Usman T.</div>
+            <div class="review-date">Google Review · 2 weeks ago</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── GALLERY ──────────────────── -->
+<section class="gallery" id="gallery">
+  <div class="section-intro reveal">
+    <div class="section-tag">Inside the Kitchen</div>
+    <h2 class="section-h2">Food that looks as good as it <em>tastes.</em></h2>
+  </div>
+  <div class="gallery-mosaic">
+    <div class="gallery-cell tall reveal">
+      <img src="https://loremflickr.com/900/700/burger,food" alt="Bun Bites gallery" loading="lazy" />
+      <div class="gallery-cell-overlay"></div>
+    </div>
+    <div class="gallery-cell reveal reveal-delay-1">
+      <img src="https://loremflickr.com/600/400/restaurant,food" alt="Bun Bites gallery" loading="lazy" />
+      <div class="gallery-cell-overlay"></div>
+    </div>
+    <div class="gallery-cell reveal reveal-delay-2">
+      <img src="https://loremflickr.com/600/400/food,grill" alt="Bun Bites gallery" loading="lazy" />
+      <div class="gallery-cell-overlay"></div>
+    </div>
+    <div class="gallery-cell reveal reveal-delay-1">
+      <img src="https://loremflickr.com/600/400/fries,food" alt="Bun Bites gallery" loading="lazy" />
+      <div class="gallery-cell-overlay"></div>
+    </div>
+    <div class="gallery-cell reveal reveal-delay-2">
+      <img src="https://loremflickr.com/600/400/chicken,food" alt="Bun Bites gallery" loading="lazy" />
+      <div class="gallery-cell-overlay"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── CTA ──────────────────── -->
+<section class="cta-section">
+  <div class="cta-tag reveal">Ready when you are</div>
+  <h2 class="cta-h2 reveal reveal-delay-1">Come hungry.<br /><em>Leave converted.</em></h2>
+  <p class="cta-sub reveal reveal-delay-2">
+    Open for takeout from 11 AM and dine-in from 2 PM till midnight. Walk in, call ahead, or message us on WhatsApp.
+  </p>
+  <div class="cta-actions reveal reveal-delay-3">
+    <a href="tel:+92" class="btn-light">Call to Reserve</a>
+    <a href="https://wa.me/92" class="btn-outline-light" target="_blank">WhatsApp Us</a>
+  </div>
+  <div class="cta-info-row reveal">
+    <div class="cta-info-item">
+      <div class="cta-info-label">Location</div>
+      <div class="cta-info-val">Gadwaal Rd, Wah Cantt</div>
+    </div>
+    <div class="cta-info-item">
+      <div class="cta-info-label">Dine In</div>
+      <div class="cta-info-val">2 pm – 12 am</div>
+    </div>
+    <div class="cta-info-item">
+      <div class="cta-info-label">Takeout</div>
+      <div class="cta-info-val">11 am – 12 am</div>
+    </div>
+    <div class="cta-info-item">
+      <div class="cta-info-label">Price Range</div>
+      <div class="cta-info-val">₨ 1,000 – 2,000</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────── FOOTER ──────────────────── -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">Bun <span>Bites</span></a>
+      <p>All-you-can-eat. Happy hour food. Crafted with care in Wah Cantt since the beginning.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#about">Our Story</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+92">Call Us</a></li>
+        <li><a href="https://wa.me/92" target="_blank">WhatsApp</a></li>
+        <li><a href="https://maps.google.com" target="_blank">Directions</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Hours</h4>
+      <ul>
+        <li><a href="#">Dine In: 2pm – 12am</a></li>
+        <li><a href="#">Takeout: 11am – 12am</a></li>
+        <li><a href="#">Happy Hour: 4pm – 7pm</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2025 Bun Bites, Wah Cantt. All rights reserved.</span>
+    <span class="footer-rating">
+      <strong>4.8 &#9733;</strong> on Google &nbsp;&middot;&nbsp; 308 reviews
+    </span>
+  </div>
+</footer>
+
+<script>
+  // ── Nav scroll effect
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // ── Reveal on scroll (IntersectionObserver — no window.scroll listener)
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ── Trigger hero reveals immediately
+  document.querySelectorAll('.hero .reveal').forEach(el => {
+    setTimeout(() => el.classList.add('in'), 200);
+  });
+</script>
+</body>
+</html>
